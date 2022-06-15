@@ -47,7 +47,7 @@ DEFAULT_APPS = [
     'django.contrib.staticfiles',
 ]
 
-INSTALLED_APPS = HELPER_APPS + MY_CUSTOM_APPS + DEFAULT_APPS;
+INSTALLED_APPS = HELPER_APPS + MY_CUSTOM_APPS + DEFAULT_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -138,3 +138,9 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'account.User'
+
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_HOST_PASSWORD='zhfuofxslyalvbgp'
+EMAIL_HOST_USER ="moustafaroushdy1@gmail.com"
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
