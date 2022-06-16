@@ -3,7 +3,6 @@ from django.utils.translation import gettext_lazy as _
 from django import forms
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, UserManager, AbstractUser
 
-
 # class CustomAccountManager(BaseUserManager):
 #     def create_user(self, email, user_type, gender, tag, address, cv, history, password=None):
 #

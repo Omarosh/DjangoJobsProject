@@ -1,9 +1,6 @@
 from email.policy import default
 from django.db import models
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
-
+from account.models import User
 
 class Job(models.Model):
     STATUS = (
@@ -19,10 +16,9 @@ class Job(models.Model):
     Modification_time = models.fields.DateField(verbose_name='Modification Time')
     Tags = models.ManyToManyField('Tag.tag')
     image_banner = models.ImageField(default='mahy.png')
-
-    # developer=models.ForeignKey(User,on_delete=models.CASCADE)
-    # # applied_developers = models.ManyToManyField('User.user')
-    # created_by= models.ForeignKey(User,on_delete=models.CASCADE)
+    developer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Accepted_Developer", related_name="Accepted_Developer", null=True)
+    applied_developers = models.ManyToManyField('account.User',verbose_name='Applied developers',related_name='applied_developers', blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Job_Owner',related_name='Job_Owner',null=True)
 
     def _str_(self):
         return self.name
