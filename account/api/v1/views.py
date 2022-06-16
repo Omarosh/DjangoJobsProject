@@ -9,12 +9,9 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-# @api_view()
-# def Hello(request):
-#     return Response('hi')
-
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+#
+# @authentication_classes([TokenAuthentication])
+# @permission_classes([IsAuthenticated])
 @api_view(['POST'])
 @permission_classes([])
 def signupUser(request):
@@ -31,11 +28,13 @@ def signupUser(request):
     return Response(**response)
 
 
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(['POST'])
 @permission_classes([])
 def signupCompany(request):
     response = {'data': None, 'status': status.HTTP_400_BAD_REQUEST}
-
+    print(request.data)
     serializer = CompanySerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
