@@ -8,7 +8,7 @@ urlpatterns = [
     path('',job_list),
     path('create',create_job),
     path('<int:id>/',job_detail),
-    path('<int:id>/accept', accept_developer_for_job),
+    path('<int:id>/accept/', accept_developer_for_job),
     path('<int:id>/apply/', job_apply),
 
 ]

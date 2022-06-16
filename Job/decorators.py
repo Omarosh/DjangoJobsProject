@@ -16,10 +16,11 @@ class IsDeveloper(BasePermission):
 class IsApplied(BasePermission):
     def has_permission(self, request, view):
         user = User.objects.get(username=request.user)
+        jobs = Job.objects.all()
 
-        print(12333333 + user.id)
+        # print( user.id)
         # ddd = Job.objects.filter(applied_developers__icontains=[user.id])
-        ddd = Job.applied_developers.filter(pk=user.id)
-        print(ddd)
+        # ddd = Job.objects.all()
+        # print(ddd)
         return True
         # return user.filter(user_type="d").exists()

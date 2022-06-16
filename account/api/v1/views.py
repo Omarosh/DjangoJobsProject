@@ -5,6 +5,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserSerializer, CompanySerializer
 from django.contrib.auth import get_user_model
+from django.contrib.auth import logout
+from django.contrib import messages
+from account.models import User
+from django.http import JsonResponse
 
 User = get_user_model()
 
@@ -130,3 +134,15 @@ def delete(request, user_type, ids):
     User.objects.filter(user_type=user_type).get(pk=ids).delete()
 
     return Response(data={'detail': 'deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def logout_user(request):
+    # User.objects.get(username=request.user)
+    print(request.user)
+    request.user.auth_token.delete()
+    logout(request)
+    messages.success(request, ("You were logged out!"))
+    return JsonResponse({"status": "logout"})

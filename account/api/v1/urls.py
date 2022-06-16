@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 from .views import signupUser, signupCompany, list_user, list_company, user_details, company_details, List, details, \
-    update, delete
+    update, delete, logout_user
 
 app_name = 'job-system-rest-v1'
 
@@ -18,6 +18,7 @@ urlpatterns = [
     path('details/<str:user_type>/<int:ids>', details, name='details'),
     path('update/<str:user_type>/<int:ids>', update, name='update'),
     path('delete/<str:user_type>/<int:ids>', delete, name='delete'),
+    path('logout_user',logout_user,name='logout_user')
 
 
 
