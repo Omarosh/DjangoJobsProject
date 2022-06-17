@@ -14,11 +14,11 @@ class Job(models.Model):
 
     name = models.fields.CharField(verbose_name=('Job Name'), max_length=100)
     description = models.fields.CharField(verbose_name=('Description'), max_length=250)
-    status = models.fields.CharField(choices=STATUS, max_length=100)
-    Creation_time = models.fields.DateField(verbose_name='Creation Time')
-    Modification_time = models.fields.DateField(verbose_name='Modification Time')
+    status = models.fields.CharField(choices=STATUS, max_length=100,default="Open")
+    Creation_time = models.fields.DateField(verbose_name='Creation Time',auto_now_add=True,blank=True)
+    Modification_time = models.fields.DateField(verbose_name='Modification Time',auto_now_add=True,blank=True)
     Tags = models.ManyToManyField('Tag.tag')
-    image_banner = models.ImageField(default='mahy.png')
+    image_banner = models.ImageField(default='lab4_odoo.png')
 
     # developer=models.ForeignKey(User,on_delete=models.CASCADE)
     # # applied_developers = models.ManyToManyField('User.user')

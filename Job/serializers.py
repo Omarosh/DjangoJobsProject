@@ -5,7 +5,7 @@ from .models import Job
 class JobSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
-        fields = '__all__'
+        fields = ['name','description','Tags','id']
         depth = 1
 
 
