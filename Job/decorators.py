@@ -18,9 +18,11 @@ class IsApplied(BasePermission):
         user = User.objects.get(username=request.user)
         jobs = Job.objects.all()
 
-        # print( user.id)
-        # ddd = Job.objects.filter(applied_developers__icontains=[user.id])
-        # ddd = Job.objects.all()
-        # print(ddd)
+        ddd = Job.objects.all()
+        for job in ddd:
+            ss = job.applied_developers
+            after  =  ss.exclude(pk=user.id)
+            print(after)
+        print(ddd)
         return True
         # return user.filter(user_type="d").exists()
