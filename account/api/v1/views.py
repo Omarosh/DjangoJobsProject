@@ -3,11 +3,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer, CompanySerializer
+from .serializers import NotificationSerializer, UserSerializer, CompanySerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth import logout
 from django.contrib import messages
-from account.models import User
+from account.models import Notification, User
 from django.http import JsonResponse
 
 User = get_user_model()
@@ -146,3 +146,12 @@ def logout_user(request):
     logout(request)
     messages.success(request, ("You were logged out!"))
     return JsonResponse({"status": "logout"})
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_notifications(request):
+    notifications = Notification.objects.filter(user = request.user)
+    serializer = NotificationSerializer(notifications,many=True)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
