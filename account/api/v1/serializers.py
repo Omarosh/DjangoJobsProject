@@ -1,5 +1,8 @@
+from dataclasses import field
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+
+from account.models import Notification
 User = get_user_model()
 
 
@@ -146,3 +149,9 @@ class CompanySerializer(serializers.ModelSerializer):
         user.set_password(self.validated_data['password'])
         user.save()
         return user
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta :
+        model = Notification
+        fields = ['message','creation_time']
