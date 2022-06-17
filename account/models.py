@@ -48,6 +48,7 @@ class User(AbstractUser, PermissionsMixin):
     address = models.fields.CharField(verbose_name=_('Address Name'), max_length=50, default='ALEX')
     cv = forms.FileField()
     history = models.TextField(_('history'), max_length=500, blank=True, null=True, default='Hello')
+    is_active = models.BooleanField(_('active'), default=False)
 
     # objects = CustomAccountManager()
     # USERNAME_FIELD = 'email'
