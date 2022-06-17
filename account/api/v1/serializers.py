@@ -46,13 +46,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id' ,'username', 'password', 'password_confirm', 'email', 'user_type', 'gender']
+        fields = ['id' ,'username', 'password', 'password_confirm', 'email', 'user_type', 'gender', 'date_of_birth']
         extra_kwargs = {
             'password': {'write_only': True},
             'email': {'required': True},
             # 'address': {'required': True},
             'gender': {'required': True},
-
         }
 
     def save(self,**kwargs):
@@ -62,6 +61,7 @@ class UserSerializer(serializers.ModelSerializer):
             email=self.validated_data['email'],
             user_type = self.validated_data['user_type'],
             gender = self.validated_data['gender'],
+            date_of_birth = self.validated_data['date_of_birth']
             # cv
         )
 
@@ -120,7 +120,7 @@ class CompanySerializer(serializers.ModelSerializer):
     password_confirm = serializers.CharField(write_only=True)
     class Meta:
         model = User
-        fields = ['username','password','password_confirm','email','user_type','gender']
+        fields = ['id', 'username','password','password_confirm','email','user_type','gender']
         extra_kwargs= {
             'password':{'write_only':True},
             'email' : {'required':True},

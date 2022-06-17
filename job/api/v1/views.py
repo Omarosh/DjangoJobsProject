@@ -2,27 +2,30 @@ from django.shortcuts import render
 from django.http import JsonResponse
 
 from account.api.v1.serializers import UserSerializer
-from Job.models import Job
+from job.models import Job
 from .serializers import JobSerializer, CreateSerializer
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework import status
-from Job.decorators import IsDeveloper,IsCompany, IsApplied
+from job.decorators import IsDeveloper,IsCompany, IsNotApplied
 from account.models import User
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated,IsCompany])
 def create_job(request,format=None):
-    print(request.data)
-    serializer = CreateSerializer(data=request.data)
+    data = request.data
+    uid = User.objects.get(username=request.user).id
+    data["created_by"] = uid
+    serializer = CreateSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
         print('data ==>',serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer._errors, status=status.HTTP_400_BAD_REQUEST)
+    return JsonResponse({"Hi" : "Hi"})
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
@@ -75,19 +78,16 @@ def job_detail(request, id,format=None):
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated, IsDeveloper, IsApplied])
+@permission_classes([IsAuthenticated, IsDeveloper, IsNotApplied])
 def job_apply(request, id, format=None):
-    # user = User.objects.get(username=request.user)
-    # job = Job.objects.get(pk=id)
-    # # print(job.applied_developers.update())
-    # job.applied_developers.add(user)
-    # serializer = JobSerializer(job, data=job)
-    # if serializer.is_valid():
-    #     serializer.save()
-    #     return Response(serializer.data)
-    # return JsonResponse({"jobs": serializer.data})
+    user = User.objects.get(username=request.user)
+    job = Job.objects.get(pk=id)
+    job.applied_developers.add(user)
 
-    return JsonResponse({"jobs": "Testing"})
+    serializer = JobSerializer(job)
+    return Response(serializer.data)
+
+    # return JsonResponse({"jobs": "Testing"})
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])

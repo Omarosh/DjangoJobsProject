@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from Tag.models import Tag
+from tag.models import Tag
 
 class TagSerializer (serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ['name']
+        fields = '__all__'

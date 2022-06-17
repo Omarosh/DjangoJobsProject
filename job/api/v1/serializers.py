@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from Job.models import Job
+from job.models import Job
 
 
 class JobSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
-        fields = '__all__'
+        fields = ['id', 'name', 'description', 'tags', 'applied_developers']
         depth = 1
 
 

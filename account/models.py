@@ -44,11 +44,13 @@ class User(AbstractUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
     user_type = models.fields.CharField(choices=USER_TYPE, max_length=1, default='d')
     gender = models.fields.CharField(choices=GENDER, max_length=1, default='f')
-    tag = models.fields.CharField(verbose_name=_('Tag Name'), max_length=50, default='JAVA')
+    tags = models.ManyToManyField('tag.tag')
     address = models.fields.CharField(verbose_name=_('Address Name'), max_length=50, default='ALEX')
     cv = forms.FileField()
     history = models.TextField(_('history'), max_length=500, blank=True, null=True, default='Hello')
     is_active = models.BooleanField(_('active'), default=False)
+    date_of_birth = models.fields.DateField(verbose_name='Date of birth', null=True, blank=True)
+
 
     # objects = CustomAccountManager()
     # USERNAME_FIELD = 'email'

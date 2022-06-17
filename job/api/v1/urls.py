@@ -1,5 +1,5 @@
 from django.urls import path
-from Job.api.v1 import views
+from job.api.v1 import views
 from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [

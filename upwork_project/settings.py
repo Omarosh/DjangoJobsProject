@@ -34,8 +34,8 @@ HELPER_APPS = [
 
 MY_CUSTOM_APPS = [
     'account',
-    'Job',
-    'Tag'
+    'job',
+    'tag'
 ]
 
 DEFAULT_APPS = [
