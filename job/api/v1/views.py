@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework import status
-from job.decorators import IsDeveloper,IsCompany, IsNotApplied
+from job.decorators import IsDeveloper,IsCompany, IsNotApplied, IsNotWorking
 from account.models import User
 
 @api_view(['POST'])
@@ -29,14 +29,16 @@ def create_job(request,format=None):
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated, IsDeveloper])
+@permission_classes([IsAuthenticated, IsCompany])
 def accept_developer_for_job(request, id, format=None):
-    user = User.objects.get(username=request.user)
+    # user = User.objects.get(username=request.user)
+    user = User.objects.get(username=request.data['username'])
     job = Job.objects.get(pk=id)
     print("Before")
     print(job.developer)
     job.developer = user
     job.status = "Inprogress"
+    job.applied_developers= []
     job.save()
     job = Job.objects.get(pk=id)
     print("after")
@@ -78,7 +80,7 @@ def job_detail(request, id,format=None):
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated, IsDeveloper, IsNotApplied])
+@permission_classes([IsAuthenticated, IsDeveloper, IsNotApplied, IsNotWorking])
 def job_apply(request, id, format=None):
     user = User.objects.get(username=request.user)
     job = Job.objects.get(pk=id)
@@ -99,3 +101,35 @@ def get_applied_developers_job(request, id, format=None):
     # return JsonResponse({"jobs": serializer.data})
 
     # return JsonResponse({"jobs": "Testing"})
+
+@api_view(['PUT'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def finish_job(request,id,format=None):
+    try:
+        job = Job.objects.get(pk=id)
+        user = User.objects.get(username=request.user)
+        if user.id  == job.developer.id or user.id == job.created_by.id:
+            if job.status == 'Inprogress':
+                job.status ='Finished'
+                job.save()
+                return JsonResponse({"Success": "Job status changed to Finished!"})
+    except Job.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+# BOUNS
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated,IsDeveloper])
+def get_all_finished_jobs(request, format=None):
+    try:
+        job = Job.objects.filter(status='finish', developer=User.objects.get(username=request.user))
+        serializer=JobSerializer(job)
+        return Response(serializer.data)
+    except Job.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+

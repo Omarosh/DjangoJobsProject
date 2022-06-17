@@ -6,6 +6,7 @@ from django import forms
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, UserManager, AbstractUser
 from django.utils import timezone
 
+
 # class CustomAccountManager(BaseUserManager):
 #     def create_user(self, email, user_type, gender, tag, address, cv, history, password=None):
 #
@@ -54,7 +55,6 @@ class User(AbstractUser, PermissionsMixin):
     is_active = models.BooleanField(_('active'), default=False)
     date_of_birth = models.fields.DateField(verbose_name='Date of birth', null=True, blank=True)
 
-
     # objects = CustomAccountManager()
     # USERNAME_FIELD = 'email'
     # REQUIRED_FIELDS = ['user_type']
@@ -74,7 +74,6 @@ class User(AbstractUser, PermissionsMixin):
 
 
 class Notification(models.Model):
-    message = models.fields.TextField(max_length=500, null = True,blank=True)
-    creation_time = models.fields.DateTimeField(default = timezone.now())
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-
+    message = models.fields.TextField(max_length=500, null=True, blank=True)
+    creation_time = models.fields.DateTimeField(verbose_name='Creation Time', auto_now_add=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

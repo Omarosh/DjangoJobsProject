@@ -29,3 +29,22 @@ class IsNotApplied(BasePermission):
 
         return True
         # return user.filter(user_type="d").exists()
+
+
+
+class IsNotWorking(BasePermission):
+    def has_permission(self, request, view):
+        user = User.objects.get(username=request.user)
+        jobs = Job.objects.all()
+        for job in jobs:
+            if user.id == job.developer.id and job.status != "Finished":
+                return False
+
+        return True
+        # return user.filter(user_type="d").exists()
+
+
+
+
+
+
