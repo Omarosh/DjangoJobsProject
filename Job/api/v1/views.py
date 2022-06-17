@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import Job
+
+from account.api.v1.serializers import UserSerializer
+from Job.models import Job
 from .serializers import JobSerializer, CreateSerializer
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework import status
-from .decorators import IsDeveloper,IsCompany, IsApplied
+from Job.decorators import IsDeveloper,IsCompany, IsApplied
 from account.models import User
 
 @api_view(['POST'])
@@ -86,3 +88,14 @@ def job_apply(request, id, format=None):
     # return JsonResponse({"jobs": serializer.data})
 
     return JsonResponse({"jobs": "Testing"})
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_applied_developers_job(request, id, format=None):
+    job = Job.objects.get(pk=id)
+    serializer = UserSerializer(job.applied_developers, many=True)
+    return Response(serializer.data)
+    # return JsonResponse({"jobs": serializer.data})
+
+    # return JsonResponse({"jobs": "Testing"})
