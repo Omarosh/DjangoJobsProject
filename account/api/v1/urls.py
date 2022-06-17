@@ -1,6 +1,5 @@
 from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
-from rest_framework 
 from .views import signupUser, signupCompany, list_user, list_company, user_details, company_details, List, details, \
     update, delete, logout_user
 

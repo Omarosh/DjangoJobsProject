@@ -7,4 +7,4 @@ class JobConfig(AppConfig):
 
 
     def ready(self) -> None:
-        from .signals im
+        from . import signals

@@ -1,7 +1,10 @@
+from email import message
+from statistics import mode
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django import forms
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, UserManager, AbstractUser
+from django.utils import timezone
 
 # class CustomAccountManager(BaseUserManager):
 #     def create_user(self, email, user_type, gender, tag, address, cv, history, password=None):
@@ -66,3 +69,10 @@ class User(AbstractUser, PermissionsMixin):
     #     # "Does the user have permissions to view the app app_label?"
     #     # Simplest possible answer: Yes, always
     #     return True
+
+
+class Notification(models.Model):
+    message = models.fields.TextField(max_length=500, null = True,blank=True)
+    creation_time = models.fields.DateTimeField(default = timezone.now())
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+
