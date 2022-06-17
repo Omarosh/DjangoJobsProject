@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+
 User = get_user_model()
 
 
@@ -46,7 +47,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id' ,'username', 'password', 'password_confirm', 'email', 'user_type', 'gender', 'date_of_birth']
+        fields = ['id', 'username', 'password', 'password_confirm', 'email', 'user_type', 'gender', 'date_of_birth']
         extra_kwargs = {
             'password': {'write_only': True},
             'email': {'required': True},
@@ -54,14 +55,14 @@ class UserSerializer(serializers.ModelSerializer):
             'gender': {'required': True},
         }
 
-    def save(self,**kwargs):
+    def save(self, **kwargs):
         print(self.validated_data['username'])
         user = User(
             username=self.validated_data['username'],
             email=self.validated_data['email'],
-            user_type = self.validated_data['user_type'],
-            gender = self.validated_data['gender'],
-            date_of_birth = self.validated_data['date_of_birth']
+            user_type=self.validated_data['user_type'],
+            gender=self.validated_data['gender'],
+            date_of_birth=self.validated_data['date_of_birth']
             # cv
         )
 
@@ -75,6 +76,10 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id']
 
 
 
@@ -118,30 +123,30 @@ class UserSerializer(serializers.ModelSerializer):
 #
 class CompanySerializer(serializers.ModelSerializer):
     password_confirm = serializers.CharField(write_only=True)
+
     class Meta:
         model = User
-        fields = ['id', 'username','password','password_confirm','email','user_type','gender']
-        extra_kwargs= {
-            'password':{'write_only':True},
-            'email' : {'required':True},
+        fields = ['id', 'username', 'password', 'password_confirm', 'email', 'user_type', 'gender']
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'email': {'required': True},
             'address': {'required': True},
             'history': {'required': True},
 
         }
-    def save(self,**kwargs):
+
+    def save(self, **kwargs):
         print(self.validated_data['username'])
         user = User(
             username=self.validated_data['username'],
             email=self.validated_data['email'],
-            user_type = self.validated_data['user_type'],
-            #address
-            #history
+            user_type=self.validated_data['user_type'],
+            # address
+            # history
         )
 
-
-        if(self.validated_data['password'] != self.validated_data['password_confirm']):
-          raise  serializers.ValidationError({'details':'passwords didnt match'})
-
+        if (self.validated_data['password'] != self.validated_data['password_confirm']):
+            raise serializers.ValidationError({'details': 'passwords didnt match'})
 
         user.set_password(self.validated_data['password'])
         user.save()
