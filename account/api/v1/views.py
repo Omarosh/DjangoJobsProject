@@ -11,6 +11,8 @@ from account.models import Notification, User
 from django.http import JsonResponse
 from job.models import Job
 from job.api.v1.serializers import JobSerializer
+from account.api.v1.serializers import CustomUserSerializer, UpdateUserSerializer
+
 
 User = get_user_model()
 
@@ -34,8 +36,7 @@ def signupUser(request):
     return Response(**response)
 
 
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+
 @api_view(['POST'])
 @permission_classes([])
 def signupCompany(request):
@@ -53,7 +54,8 @@ def signupCompany(request):
 
 
 @api_view(['GET'])
-@permission_classes([])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def list_user(request):
     user_objects = User.objects.filter(user_type='d')
     serializer = UserSerializer(user_objects, many=True)
@@ -71,6 +73,8 @@ def list_company(request):
 @api_view(['GET'])
 @permission_classes([])
 def user_details(request):
+    print(1111)
+    print(request.user)
     user_object = User.objects.get(username=request.user)
     serializer = UserSerializer(user_object)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -97,28 +101,30 @@ def List(request, user_type):
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
-@permission_classes([])
-def details(request, user_type, ids):
-    details_object = User.objects.filter(user_type=user_type).get(pk=ids)
-    if user_type == 'c':
-        serializer = CompanySerializer(details_object)
-    else:
-        serializer = UserSerializer(details_object)
-    return Response(data=serializer.data, status=status.HTTP_200_OK)
+# @api_view(['GET'])
+# @permission_classes([])
+# def details(request, user_type, ids):
+#     print()
+#     details_object = User.objects.filter(user_type=user_type).get(pk=ids)
+#     if user_type == 'c':
+#         serializer = CompanySerializer(details_object)
+#     else:
+#         serializer = UserSerializer(details_object)
+#     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['PUT', 'PATCH'])
-@permission_classes([])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def update(request):
     response = {'data': None, 'status': status.HTTP_400_BAD_REQUEST}
 
     update_instance = User.objects.get(username=request.user)
 
     if request.method == 'PUT':
-        serializer = CompanySerializer(instance=update_instance, data=request.data, partial=True)
+        serializer = UserSerializer(instance=update_instance, data=request.data, partial=True)
     else:
-        serializer = CompanySerializer(instance=update_instance, data=request.data, partial=True)
+        serializer = UserSerializer(instance=update_instance, data=request.data, partial=True)
 
     if serializer.is_valid():
         serializer.save()

@@ -14,7 +14,7 @@ from account.models import User
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated,IsCompany])
+@permission_classes([IsAuthenticated, IsCompany])
 def create_job(request,format=None):
     data = request.data
     uid = User.objects.get(username=request.user).id
@@ -78,7 +78,7 @@ def job_detail(request, id,format=None):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated, IsDeveloper, IsNotApplied, IsNotWorking])
 def job_apply(request, id, format=None):
