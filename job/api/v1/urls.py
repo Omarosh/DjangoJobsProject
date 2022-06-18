@@ -9,6 +9,8 @@ urlpatterns = [
     path('<int:id>/accept/', views.accept_developer_for_job),
     path('<int:id>/apply/', views.job_apply),
     path('<int:id>/getApplied/', views.get_applied_developers_job),
+    path('<int:id>/finish_job/',views.finish_job),
+    # path('get_all_finished_jobs',views.get_all_finished_jobs)
 
 ]
 

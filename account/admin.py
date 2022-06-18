@@ -8,7 +8,7 @@ class UserAdminConfig(UserAdmin):
     pass
     model = User
     search_fields = ('email', 'user_type',)
-    list_display = ('email', 'user_type', 'gender', 'tag', 'address', 'cv', 'history')
+    list_display = ('email', 'user_type', 'gender', 'tags', 'address', 'cv', 'history')
     list_filter = ('email', 'user_name', 'is_active', 'is_staff')
 
     fieldsets = (

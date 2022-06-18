@@ -9,6 +9,8 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from account.models import Notification, User
 from django.http import JsonResponse
+from job.models import Job
+from job.api.v1.serializers import JobSerializer
 
 User = get_user_model()
 
@@ -68,8 +70,8 @@ def list_company(request):
 
 @api_view(['GET'])
 @permission_classes([])
-def user_details(request, user_id):
-    user_object = User.objects.filter(user_type='d').get(pk=user_id)
+def user_details(request):
+    user_object = User.objects.get(username=request.user)
     serializer = UserSerializer(user_object)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -108,13 +110,13 @@ def details(request, user_type, ids):
 
 @api_view(['PUT', 'PATCH'])
 @permission_classes([])
-def update(request, user_type, ids):
+def update(request):
     response = {'data': None, 'status': status.HTTP_400_BAD_REQUEST}
 
-    update_instance = User.objects.filter(user_type=user_type).get(pk=ids)
+    update_instance = User.objects.get(username=request.user)
 
     if request.method == 'PUT':
-        serializer = CompanySerializer(instance=update_instance, data=request.data)
+        serializer = CompanySerializer(instance=update_instance, data=request.data, partial=True)
     else:
         serializer = CompanySerializer(instance=update_instance, data=request.data, partial=True)
 
@@ -155,3 +157,16 @@ def get_notifications(request):
     notifications = Notification.objects.filter(user = request.user)
     serializer = NotificationSerializer(notifications,many=True)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_all_finished_jobs(request,id, format=None):
+    try:
+        job = Job.objects.filter(status='Finished', developer=User.objects.get(username=request.user))
+        serializer=JobSerializer(job, many=True)
+        return Response(serializer.data)
+    except Job.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+

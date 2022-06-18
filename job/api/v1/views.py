@@ -114,22 +114,16 @@ def finish_job(request,id,format=None):
                 job.status ='Finished'
                 job.save()
                 return JsonResponse({"Success": "Job status changed to Finished!"})
+            else:
+                return JsonResponse({"Failed": "Job status is not in progress"})
+        else:
+            return JsonResponse({"Failed": "yor not Authorized to finish this job"})
+
     except Job.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-# BOUNS
 
 
-@api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated,IsDeveloper])
-def get_all_finished_jobs(request, format=None):
-    try:
-        job = Job.objects.filter(status='finish', developer=User.objects.get(username=request.user))
-        serializer=JobSerializer(job)
-        return Response(serializer.data)
-    except Job.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 
