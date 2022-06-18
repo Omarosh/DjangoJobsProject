@@ -65,18 +65,19 @@ def list_company(request):
 
 @api_view(['GET'])
 @permission_classes([])
-def user_details(request, user_id):
-    user_object = User.objects.filter(user_type='d').get(pk=user_id)
+def user_details(request):
+    print(request.user)
+    user_object = User.objects.get(username=request.user)
     serializer = UserSerializer(user_object)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
-@permission_classes([])
-def company_details(request, company_id):
-    company_object = User.objects.filter(user_type='c').get(pk=company_id)
-    serializer = CompanySerializer(company_object)
-    return Response(data=serializer.data, status=status.HTTP_200_OK)
+# @api_view(['GET'])
+# @permission_classes([])
+# def company_details(request, company_id):
+#     company_object = User.objects.filter(user_type='c').get(pk=company_id)
+#     serializer = CompanySerializer(company_object)
+#     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -105,13 +106,13 @@ def details(request, user_type, ids):
 
 @api_view(['PUT', 'PATCH'])
 @permission_classes([])
-def update(request, user_type, ids):
+def update(request):
     response = {'data': None, 'status': status.HTTP_400_BAD_REQUEST}
 
-    update_instance = User.objects.filter(user_type=user_type).get(pk=ids)
+    update_instance = User.objects.get(username=request.user)
 
     if request.method == 'PUT':
-        serializer = CompanySerializer(instance=update_instance, data=request.data)
+        serializer = CompanySerializer(instance=update_instance, data=request.data, partial=True)
     else:
         serializer = CompanySerializer(instance=update_instance, data=request.data, partial=True)
 
